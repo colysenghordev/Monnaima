@@ -3,7 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Compte;
+use App\Entity\Depot;
+use App\Entity\Partenaire;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,32 +29,47 @@ class SecurityController extends AbstractController
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     {
         $values = json_decode($request->getContent());
+        $entityManager = $this->getDoctrine()->getManager();
+
         if(isset($values->username, $values->password, $values->roles, $values->prenom, $values->nom, $values->adresse, $values->telephone, $values->email, $values->photo)) {
             $user = new User();
             $user->setUsername($values->username);
             $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
-            $user->setRoles([$values->roles]);
+            $user->setRoles($values->roles);
             $user->setPrenom($values->prenom);
             $user->setNom($values->nom);
             $user->setAdresse($values->adresse);
             $user->setTelephone($values->telephone);
             $user->setEmail($values->email);
             $user->setPhoto($values->photo);
-            
-            /*$errors = $validator->validate($user);
-            if(count($errors)) {
-                $errors = $serializer->serialize($errors, 'json');
-                return new Response($errors, 500, [
-                    'Content-Type' => 'application/json'
-                ]);
-            }*/
+
+            $partenaire = new Partenaire();
+            $partenaire->setRaisonSociale($values->raisonSociale);
+            $partenaire->setNinea($values->ninea);
+            $partenaire->setStatut($values->statut);
+            $partenaire->setUser($user);
+
+            $depot = new Depot();
+            $depot->setuser($user);
+            $depot->setMontant($values->montant);
+            $depot->setDateDepot(new \DateTime());
+
+            $compte = new Compte();
+            $random = random_int(100000, 10000000000);
+            $compte->setDepot($depot);
+            $compte->setPartenaire($partenaire);
+            $compte->setNumeroCompte("$random");
+            $compte->setSolde($values->solde);
 
             $entityManager->persist($user);
+            $entityManager->persist($partenaire);
+            $entityManager->persist($depot);
+            $entityManager->persist($compte);
             $entityManager->flush();
 
             $data = [
                 'status' => 201,
-                'message' => 'L\'utilisateur a été créé'
+                'message' => 'Le partenaire: '.$partenaire->getNinea().' a bien été créer avec un muméro de compte : '.$compte->getNumerocompte()
             ];
 
             return new JsonResponse($data, 201);
@@ -63,14 +82,23 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/login", name="login", methods={"POST"})
+     * @Route("/caissier", name="ajout-caissier")
      */
-    public function login(Request $request)
+    public function caissier(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     {
-        $user = $this->getUser();
-        return $this->json([
-            'username' => $user->getUsername(),
-            'roles' => $user->getRoles()
-        ]);
-    }
+        $user = $serializer->deserialize($request->getContent(), User::class, 'json');
+
+        $values = json_decode($request->getContent());
+        $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        $data = [
+            'status' => 201,
+            'message' => 'Le caissier a bien été ajouté'
+        ];
+
+        return new JsonResponse($data, 201);
+    }  
 }

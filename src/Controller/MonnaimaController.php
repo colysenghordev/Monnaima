@@ -49,13 +49,13 @@ class MonnaimaController extends AbstractController
      */
     public function ajoutpartenaire(Request $request)
     {
-        $values        = json_decode($request->getContent());
+        $values = json_decode($request->getContent());
         $entityManager = $this->getDoctrine()->getManager();
 
-        $userRepo  = $this->getDoctrine()->getRepository(User::class);
-        $user      = $userRepo->find($values->user);
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->find($values->user);
 
-        $partenaire    = new Partenaire();
+        $partenaire = new Partenaire();
 
         $partenaire->setRaisonSociale($values->raisonSociale);
         $partenaire->setNinea($values->ninea);
@@ -83,13 +83,13 @@ class MonnaimaController extends AbstractController
      */
     public function depot(Request $request)
     {
-        $values          = json_decode($request->getContent());
-        $entityManager   = $this->getDoctrine()->getManager();
+        $values = json_decode($request->getContent());
+        $entityManager = $this->getDoctrine()->getManager();
 
-        $userRepo        = $this->getDoctrine()->getRepository(User::class);
-        $user            = $userRepo->find($values->user);
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->find($values->user);
 
-        $depot           = new Depot();
+        $depot = new Depot();
 
         $depot->setuser($user);
         $depot->setMontant($values->montant);
@@ -119,15 +119,15 @@ class MonnaimaController extends AbstractController
      */
     public function compte(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager)
     {
-        $values          = json_decode($request->getContent());
-        $entityManager   = $this->getDoctrine()->getManager();
+        $values = json_decode($request->getContent());
+        $entityManager = $this->getDoctrine()->getManager();
 
         $random = random_int(100000, 10000000000);
 
-        $depotRepo  = $this->getDoctrine()->getRepository(Depot::class);
-        $depot     = $depotRepo->find($values->depot);
-        $partenaireRepo  = $this->getDoctrine()->getRepository(Partenaire::class);
-        $partenaire      = $partenaireRepo->find($values->partenaire);
+        $depotRepo = $this->getDoctrine()->getRepository(Depot::class);
+        $depot = $depotRepo->find($values->depot);
+        $partenaireRepo = $this->getDoctrine()->getRepository(Partenaire::class);
+        $partenaire = $partenaireRepo->find($values->partenaire);
 
         $compte = new Compte();
 
@@ -148,7 +148,7 @@ class MonnaimaController extends AbstractController
     public function listercompte(CompteRepository $compteRepository, SerializerInterface $serializer)
     {
         $compte = $compteRepository->findAll();
-        $data   = $serializer->serialize($compte, 'json');
+        $data = $serializer->serialize($compte, 'json');
         return new Response($data, 200, []);
     }
 }
