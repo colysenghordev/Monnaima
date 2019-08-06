@@ -4,11 +4,14 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(fields={"username"}, message="Cet utilisateur existe déjà")
  */
 class User implements UserInterface
 {
@@ -21,6 +24,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\Length(min=4, max=180)
      */
     private $username;
 
@@ -32,36 +36,43 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\Length(min=4, max=180)
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=4)
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=2, minMessage = "Votre nom est trop court")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=4, minMessage = "Votre adresse est trop courte")
      */
     private $adresse;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer", length=255)
+     * @Assert\Positive
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=5, minMessage = "Votre email est trop court")
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * Assert\Url()
      */
     private $photo;
 
@@ -190,12 +201,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getTelephone(): ?string
+    public function getTelephone(): ?int
     {
         return $this->telephone;
     }
 
-    public function setTelephone(string $telephone): self
+    public function setTelephone(int $telephone): self
     {
         $this->telephone = $telephone;
 

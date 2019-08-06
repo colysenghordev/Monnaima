@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CompteRepository")
@@ -18,6 +19,7 @@ class Compte
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=5, minMessage = "Votre n° de compte est trop courte")
      */
     private $numeroCompte;
 

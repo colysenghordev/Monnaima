@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,11 +21,13 @@ class Partenaire
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=4, minMessage = "Votre raison sociale est trop courte")
      */
     private $raisonSociale;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=4, minMessage = "Votre ninea est trop courte")
      */
     private $ninea;
 
