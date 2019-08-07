@@ -26,7 +26,7 @@ class AdminFixtures extends Fixture
         $user->setPrenom('Coly');
         $user->setNom('Senghor');
         $user->setAdresse('Keur Massar');
-        $user->setTelephone('77 193 31 21');
+        $user->setTelephone('771933121');
         $user->setEmail('sakouthiang@gmail.com');
 
         // $manager->persist($product);

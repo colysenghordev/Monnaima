@@ -93,7 +93,7 @@ class MonnaimaController extends AbstractController
 
         $depot->setuser($user);
         $depot->setMontant($values->montant);
-        $depot->setDateDepot(new \DateTime('2019-10-10'));
+        $depot->setDateDepot(new \DateTime());
 
         $entityManager->persist($depot);
         $entityManager->flush();

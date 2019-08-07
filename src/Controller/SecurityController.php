@@ -33,7 +33,8 @@ class SecurityController extends AbstractController
         $values = json_decode($request->getContent());
         $entityManager = $this->getDoctrine()->getManager();
 
-        if(isset($values->username, $values->password, $values->roles, $values->prenom, $values->nom, $values->adresse, $values->telephone, $values->email, $values->photo)) {
+        if(isset($values->username, $values->password, $values->roles, $values->prenom, $values->nom, $values->adresse, $values->telephone, $values->email, $values->photo))
+        {
             $user = new User();
             $user->setUsername($values->username);
             $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
@@ -79,7 +80,7 @@ class SecurityController extends AbstractController
 
             $data = [
                 'status' => 201,
-                'message' => 'Le partenaire: '.$partenaire->getNinea().' a bien été créer avec un muméro de compte : '.$compte->getNumerocompte()
+                'message' => 'Le partenaire: '.$partenaire->getNinea().' a bien été créer avec un muméro de compte : '.$compte->getNumeroCompte()
             ];
 
             return new JsonResponse($data, 201);

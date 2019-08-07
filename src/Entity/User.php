@@ -24,7 +24,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Assert\Length(min=4, max=180)
+     * @Assert\Length(min=4, max=180, minMessage = "le nom d'utilisateur est trop court")
      */
     private $username;
 
@@ -36,7 +36,6 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Assert\Length(min=4, max=180)
      */
     private $password;
 
@@ -59,8 +58,9 @@ class User implements UserInterface
     private $adresse;
 
     /**
-     * @ORM\Column(type="integer", length=255)
-     * @Assert\Positive
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank(message="Vous devez insérer un téléphone")
+     * @Assert\Regex(pattern="/^(\+[1-9][0-9]*(\([0-9]*\)|-[0-9]*-))?[0]?[1-9][0-9\-]*$/", match=true, message="Votre numero ne doit pas contenir de lettre")
      */
     private $telephone;
 
@@ -201,12 +201,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getTelephone(): ?int
+    public function getTelephone(): ?string
     {
         return $this->telephone;
     }
 
-    public function setTelephone(int $telephone): self
+    public function setTelephone(string $telephone): self
     {
         $this->telephone = $telephone;
 

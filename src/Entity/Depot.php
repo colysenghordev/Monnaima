@@ -21,7 +21,7 @@ class Depot
 
     /**
      * @ORM\Column(type="bigint")
-     * @Assert\Positive
+     * @Assert\GreaterThanOrEqual(75000)
      */
     private $montant;
 
